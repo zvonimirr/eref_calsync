@@ -42,11 +42,10 @@ defmodule ErefCalsync.Gcal do
         summary: class.name,
         description: "#{class.teacher} - #{class.room}",
         location: class.room,
-        colorId: colorId
-        # TODO: Add recurrence
-        # reccurence: [
-        #   "RRULE:FREQ=WEEKLY;"
-        # ]
+        colorId: colorId,
+        recurrence: [
+          "RRULE:FREQ=WEEKLY"
+        ]
       }
       |> Map.merge(get_datetime_from_class(class))
 
