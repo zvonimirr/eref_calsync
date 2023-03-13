@@ -21,7 +21,7 @@
       calendar_id:
         "<YOUR CALENDAR ID>"
     ```
-5. Run the app with `GOOGLE_APPLICATION_CREDENTIALS=\<path to json\> iex -S mix`
+5. Run the app with `GOOGLE_APPLICATION_CREDENTIALS=<path to json> iex -S mix`
 6. Fetch the classes:
 ```elixir
 classes = ErefCalsync.Class.Crawler.get_classes_from_url("<URL (i.e. https://eref.vts.su.ac.rs/sr/default/schedule/groupschedule/id/643/school_year/18>")
