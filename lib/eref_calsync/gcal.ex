@@ -35,11 +35,14 @@ defmodule ErefCalsync.Gcal do
   end
 
   defp create_event(%ErefCalsync.Class{} = class) do
+    colorId = if class.enrolled, do: 8, else: 11
+
     body =
       %{
         summary: class.name,
-        description: '#{class.teacher} - #{class.room}',
-        location: class.room
+        description: "#{class.teacher} - #{class.room}",
+        location: class.room,
+        colorId: colorId
         # TODO: Add recurrence
         # reccurence: [
         #   "RRULE:FREQ=WEEKLY;"
