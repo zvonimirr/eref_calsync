@@ -22,7 +22,9 @@ defmodule ErefCalsync.Gcal do
     Repo.all(from(c in ErefCalsync.Class, where: not is_nil(c.google_calendar_id)))
     |> Enum.map(fn class ->
       Api.Events.calendar_events_delete(connect(), @calendar_id, class.google_calendar_id)
-      Repo.delete!(class)
+
+      ErefCalsync.Class.changeset(class, %{google_calendar_id: nil})
+      |> Repo.update!()
     end)
   end
 
@@ -38,6 +40,10 @@ defmodule ErefCalsync.Gcal do
         summary: class.name,
         description: '#{class.teacher} - #{class.room}',
         location: class.room
+        # TODO: Add recurrence
+        # reccurence: [
+        #   "RRULE:FREQ=WEEKLY;"
+        # ]
       }
       |> Map.merge(get_datetime_from_class(class))
 
