@@ -48,7 +48,7 @@ defmodule ErefCalsync.Class.Crawler do
       %{
         name: Floki.text(name_el),
         teacher: Floki.text(teacher_el),
-        place: Floki.text(place_el)
+        room: Floki.text(place_el)
       }
     end)
   end
