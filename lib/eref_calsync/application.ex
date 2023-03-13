@@ -14,7 +14,8 @@ defmodule ErefCalsync.Application do
       |> File.read!()
       |> Jason.decode!()
 
-    source = {:service_account, credentials}
+    scopes = ["https://www.googleapis.com/auth/calendar"]
+    source = {:service_account, credentials, scopes: scopes}
 
     children = [
       ErefCalsync.Repo,

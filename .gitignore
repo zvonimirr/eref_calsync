@@ -30,3 +30,4 @@ database.db*
 
 # Auth
 *.json
+config/secret.exs
