@@ -24,3 +24,6 @@ eref_calsync-*.tar
 
 # Temporary files, for example, from tests.
 /tmp/
+
+# Database
+database.db*
