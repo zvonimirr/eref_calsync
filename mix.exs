@@ -25,7 +25,10 @@ defmodule ErefCalsync.MixProject do
       {:ecto_sql, "~> 3.0"},
       {:ecto_sqlite3, "~> 0.9.1"},
       {:httpoison, "~> 2.1"},
-      {:floki, "~> 0.34.2"}
+      {:floki, "~> 0.34.2"},
+      {:jason, "~> 1.4"},
+      {:goth, "~> 1.3"},
+      {:google_api_calendar, "~> 0.21.8"}
       # {:dep_from_hexpm, "~> 0.3.0"},
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}
     ]

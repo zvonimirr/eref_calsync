@@ -7,8 +7,18 @@ defmodule ErefCalsync.Application do
 
   @impl true
   def start(_type, _args) do
+    # TODO: Show a proper error message if the GOOGLE_APPLICATION_CREDENTIALS
+    # environment variable is not set.
+    credentials =
+      System.fetch_env!("GOOGLE_APPLICATION_CREDENTIALS")
+      |> File.read!()
+      |> Jason.decode!()
+
+    source = {:service_account, credentials}
+
     children = [
-      ErefCalsync.Repo
+      ErefCalsync.Repo,
+      {Goth, name: ErefCalsync.Goth, source: source}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

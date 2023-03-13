@@ -27,3 +27,6 @@ eref_calsync-*.tar
 
 # Database
 database.db*
+
+# Auth
+*.json
