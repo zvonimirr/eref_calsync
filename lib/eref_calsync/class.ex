@@ -31,4 +31,23 @@ defmodule ErefCalsync.Class do
     |> validate_required([:name, :teacher, :day, :start_time, :end_time, :room, :enrolled])
     |> unique_constraint(:google_calendar_id)
   end
+
+  def get_datetime_from_class(%__MODULE__{} = class) do
+    now = Timex.now("Europe/Berlin")
+
+    day =
+      Enum.reduce_while(0..6, now, fn _i, acc ->
+        if Date.day_of_week(acc) == class.day + 1 do
+          {:halt, acc}
+        else
+          {:cont, Timex.shift(acc, days: 1)}
+        end
+      end)
+
+    start_time = Timex.set(day, hour: class.start_time.hour, minute: class.start_time.minute)
+
+    end_time = Timex.set(day, hour: class.end_time.hour, minute: class.end_time.minute)
+
+    {start_time, end_time}
+  end
 end

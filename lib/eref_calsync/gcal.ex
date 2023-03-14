@@ -5,6 +5,8 @@ defmodule ErefCalsync.Gcal do
   import Ecto.Query
 
   @calendar_id Application.compile_env!(:eref_calsync, :calendar_id)
+  @color_gray 8
+  @color_tomato 11
 
   def create_calendar do
     Repo.all(from(c in ErefCalsync.Class, where: is_nil(c.google_calendar_id)))
@@ -35,67 +37,34 @@ defmodule ErefCalsync.Gcal do
   end
 
   defp create_event(%ErefCalsync.Class{} = class) do
-    colorId = if class.enrolled, do: 8, else: 11
+    colorId = if class.enrolled, do: @color_gray, else: @color_tomato
+    {dtstart, dtend} = ErefCalsync.Class.get_datetime_from_class(class)
 
-    body =
-      %{
-        summary: class.name,
-        description: "#{class.teacher} - #{class.room}",
-        location: class.room,
-        colorId: colorId,
-        recurrence: [
-          "RRULE:FREQ=WEEKLY"
-        ]
-      }
-      |> Map.merge(get_datetime_from_class(class))
+    startdt = %{
+      dateTime: dtstart |> Timex.to_datetime() |> DateTime.to_iso8601(),
+      timeZone: "Europe/Berlin"
+    }
+
+    enddt = %{
+      dateTime: dtend |> Timex.to_datetime() |> DateTime.to_iso8601(),
+      timeZone: "Europe/Berlin"
+    }
+
+    body = %{
+      summary: class.name,
+      description: "#{class.teacher} - #{class.room}",
+      location: class.room,
+      colorId: colorId,
+      recurrence: [
+        "RRULE:FREQ=WEEKLY"
+      ],
+      start: startdt,
+      end: enddt
+    }
 
     {:ok, event} = Api.Events.calendar_events_insert(connect(), @calendar_id, body: body)
 
     event
     |> Map.merge(%{db_id: class.id})
-  end
-
-  defp get_datetime_from_class(%ErefCalsync.Class{} = class) do
-    # class.day maps to day of week
-    # class.start_time maps to start time
-    # class.end_time maps to end time
-
-    # From current time skip to the first day of the week
-    now = DateTime.now!("Europe/Berlin")
-    # Keep increasing the day until we reach the day of the week
-    # of the class
-    day =
-      Enum.reduce_while(0..6, now, fn _i, acc ->
-        if Date.day_of_week(acc) == class.day + 1 do
-          {:halt, acc}
-        else
-          {:cont, DateTime.add(acc, 1, :day)}
-        end
-      end)
-
-    # Add the start time to the day
-    start_time =
-      day
-      |> DateTime.to_date()
-      |> DateTime.new!(class.start_time, "Europe/Berlin")
-      |> DateTime.to_iso8601()
-
-    # Add the end time to the day
-    end_time =
-      day
-      |> DateTime.to_date()
-      |> DateTime.new!(class.end_time, "Europe/Berlin")
-      |> DateTime.to_iso8601()
-
-    %{
-      start: %{
-        dateTime: start_time,
-        timeZone: "Europe/Berlin"
-      },
-      end: %{
-        dateTime: end_time,
-        timeZone: "Europe/Berlin"
-      }
-    }
   end
 end
