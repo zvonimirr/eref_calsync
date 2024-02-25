@@ -10,10 +10,7 @@
 3. Add your service account as an owner of that calendar (i.e. allow them to alter events)
 
 ## App Setup
-1. Run `mix deps.get`
-2. Run `mix ecto.create`
-3. Run `mix ecto.migrate`
-4. Create `config/secret.exs`:
+1. Create `config/secret.exs`:
 	```elixir
     import Config
 
@@ -21,6 +18,9 @@
       calendar_id:
         "<YOUR CALENDAR ID>"
     ```
+2. Run `mix deps.get`
+3. Run `mix ecto.create`
+4. Run `mix ecto.migrate`
 5. Run the app with `GOOGLE_APPLICATION_CREDENTIALS=<path to json> iex -S mix`
 6. Fetch the classes:
 ```elixir
